@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { DataSource } from 'typeorm';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [ConfigModule.forRoot({isGlobal: true}), UserModule  , AuthModule, TypeOrmModule.forRoot({
@@ -18,7 +19,9 @@ import { DataSource } from 'typeorm';
     entities: [User],
     synchronize: true,
 
-  })],
+  }), 
+  PassportModule.register({session:true}),
+],
   controllers: [],
   providers: [],
 })
