@@ -17,11 +17,11 @@ export class UserController{
 
     @Get('cancle')
     async cancle() {
-        return "approval";
+        return "cancle";
     }
 
     @Get('fail')
     async fail() {
-        return "approval";
+        return "fail";
     }
 }

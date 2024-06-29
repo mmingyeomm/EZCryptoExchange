@@ -17,7 +17,4 @@ export class User {
     @Column()
     walletAddress: string; 
 
-    @Column()
-    balance: number;
-
 }
