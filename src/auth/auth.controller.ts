@@ -6,8 +6,6 @@ import { Request } from 'express';
 @Controller('api/auth')
 export class authController {
 
-    
-
     @Get('google/login')
     @UseGuards(GoogleAuthGuard)
     handleLoginGoogle() {
