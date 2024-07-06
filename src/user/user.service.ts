@@ -11,9 +11,10 @@ export class UserService {
     async requestToKakaoPay(): Promise<AxiosResponse<any>> {
         const url = 'https://open-api.kakaopay.com/online/v1/payment/ready';
         const headers = {
+            
             'Authorization': 'SECRET_KEY DEVB707D3F985C29167F2EE70FE078541F72778F', // 실제 API 키로 대체
             'Content-Type': 'application/json',
-            
+
         };
         const data = {
             cid: 'TC0ONETIME',  // 테스트 코드
