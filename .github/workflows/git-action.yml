@@ -16,7 +16,7 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build the Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/ezcryptoexchange .
+        run: docker build -t ezcryptoexchange .
         
       - name: tagging
         run: docker tag ezcryptoexchange:latest ${{ secrets.DOCKERHUB_USERNAME }}/ezcryptoexchange:latest
