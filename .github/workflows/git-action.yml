@@ -23,3 +23,5 @@ jobs:
 
       - name: Push to Dockerhub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/ezcryptoexchange:latest
+
+
