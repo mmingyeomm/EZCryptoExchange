@@ -16,3 +16,17 @@ services:
       -KAKAOPAY_SECRET = DEVB707D3F985C29167F2EE70FE078541F72778F
     ports:
       -"3001:3001"
+
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7.34
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ezcryptoexchange
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
