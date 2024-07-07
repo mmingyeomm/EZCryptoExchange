@@ -3,17 +3,17 @@ version: '3'
 services:
   backend:
     build: ./
-    container_name: EZCrptoExchange
+    container_name: EZCryptoExchange
     environment:
-      -GOOGLE_CLIENTID = 44185310538-c107ojpnshc57dtkeipcm8nvc7glme5u.apps.googleusercontent.com
-      -GOOGLE_SECRET = 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
-      -APP_PORT = 3001
-      -GOOGLE_CALLBACK_URL = "http://localhost:3001/api/auth/google/redirect"
-      -KAKAO_CLIENTID = ea6e7a064dd68c986c9c28153f2e9d4d
-      -KAKAO_SECRET = XT15CeDinRRx2M9Ju3h70S1AiDpghKjM
-      -KAKAO_CALLBACK_URL = "http://localhost:3001/api/auth/kakao/redirect"
-      -SESSION_SECRET = awefaedfawdagewgwsawedfag
-      -KAKAOPAY_SECRET = DEVB707D3F985C29167F2EE70FE078541F72778F
+      - GOOGLE_CLIENTID = 44185310538-c107ojpnshc57dtkeipcm8nvc7glme5u.apps.googleusercontent.com
+      - GOOGLE_SECRET = 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
+      - APP_PORT = 3001
+      - GOOGLE_CALLBACK_URL = "http://localhost:3001/api/auth/google/redirect"
+      - KAKAO_CLIENTID = ea6e7a064dd68c986c9c28153f2e9d4d
+      - KAKAO_SECRET = XT15CeDinRRx2M9Ju3h70S1AiDpghKjM
+      - KAKAO_CALLBACK_URL = "http://localhost:3001/api/auth/kakao/redirect"
+      - SESSION_SECRET = awefaedfawdagewgwsawedfag
+      - KAKAOPAY_SECRET = DEVB707D3F985C29167F2EE70FE078541F72778F
     ports:
       -"3001:3001"
 
