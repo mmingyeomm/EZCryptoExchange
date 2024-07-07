@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import * as dotenv from 'dotenv';
 
 //1. backend 로그인 
 //2. ethers js로 로그인 시에 지갑 생성되는 로직 
@@ -14,6 +15,7 @@ import * as passport from 'passport';
 
 
 async function bootstrap() {
+  dotenv.config();
   const app = await NestFactory.create(AppModule);
   app.use(session({
     secret: 'awefaedfawdagewgwsawedfag',

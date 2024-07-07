@@ -17,16 +17,3 @@ services:
     ports:
       -"3001:3001"
 
-    depends_on:
-      - mysql
-
-  mysql:
-    image: mysql:5.7.34
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=ezcryptoexchange
-    volumes:
-      - mysql-data:/var/lib/mysql
-
-volumes:
-  mysql-data:
