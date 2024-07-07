@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
 import { SessionSerializer } from './utils/Serializer';
-import { GoogleStrategy } from './utils/strategies/google.strategy';
+// import { GoogleStrategy } from './utils/strategies/google.strategy';
 import { KakaoStrategy } from './utils/strategies/kakao.strategy';
 
 @Module({
@@ -13,7 +13,7 @@ import { KakaoStrategy } from './utils/strategies/kakao.strategy';
     ],
     controllers: [authController],
     providers: [
-        GoogleStrategy, 
+        // GoogleStrategy, 
         KakaoStrategy,
         SessionSerializer,
         {

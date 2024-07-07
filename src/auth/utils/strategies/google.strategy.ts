@@ -1,29 +1,29 @@
-import { PassportStrategy } from '@nestjs/passport'
-import { Profile, Strategy } from 'passport-google-oauth20'
-import * as dotenv from 'dotenv'
-import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { AuthService } from 'src/auth/auth.service';
+// import { PassportStrategy } from '@nestjs/passport'
+// import { Profile, Strategy } from 'passport-google-oauth20'
+// import * as dotenv from 'dotenv'
+// import { Inject, Injectable } from '@nestjs/common';
+// import { ConfigService } from '@nestjs/config';
+// import { AuthService } from 'src/auth/auth.service';
 
-@Injectable()
-export class GoogleStrategy extends PassportStrategy(Strategy) {
+// @Injectable()
+// export class GoogleStrategy extends PassportStrategy(Strategy) {
 
 
-    constructor(private readonly configService: ConfigService,
-                @Inject('AUTH_SERVICE') private readonly authService: AuthService,) {
-        super({
-            clientID: "ezcryptoexchange.creye0kuc4ct.ap-northeast-2.rds.amazonaws.com",
-            clientSecret: process.env.GOOGLE_SECRET,
-            callbackURL: process.env.GOOGLE_CALLBACK_URL,
-            scope: ['profile', 'email'],
-        });    
-    }
+//     constructor(private readonly configService: ConfigService,
+//                 @Inject('AUTH_SERVICE') private readonly authService: AuthService,) {
+//         super({
+//             clientID: process.env.GOOGLE_CLIENTID,
+//             clientSecret: process.env.GOOGLE_SECRET,
+//             callbackURL: process.env.GOOGLE_CALLBACK_URL,
+//             scope: ['profile', 'email'],
+//         });    
+//     }
 
-    async validate(accessToken: string, refreshToken: string, profile: Profile) {
-        console.log(profile)
-        const user = await this.authService.validateUser({email: profile.emails[0].value, 
-                                       displayName:profile.displayName, walletPrivateKey: "1", walletAddress: "1"})
+//     async validate(accessToken: string, refreshToken: string, profile: Profile) {
+//         console.log(profile)
+//         const user = await this.authService.validateUser({email: profile.emails[0].value, 
+//                                        displayName:profile.displayName, walletPrivateKey: "1", walletAddress: "1"})
 
-        return user || null; 
-    }
-}
+//         return user || null; 
+//     }
+// }

@@ -12,9 +12,10 @@ export class KakaoStrategy extends PassportStrategy(Strategy) {
     @Inject('AUTH_SERVICE') private readonly authService: AuthService,
   ) {
     super({	
-      clientID: configService.get('KAKAO_CLIENTID'),
-      clientSecret: configService.get('KAKAO_SECRET'),
-      callbackURL: configService.get('KAKAO_CALLBACK_URL'),
+      clientID: "ea6e7a064dd68c986c9c28153f2e9d4d",
+
+      clientSecret: "XT15CeDinRRx2M9Ju3h70S1AiDpghKjM",
+      callbackURL: "http://localhost:3001/api/auth/kakao/redirect",
     });
   }
 
