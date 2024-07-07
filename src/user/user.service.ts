@@ -24,9 +24,9 @@ export class UserService {
             quantity: 10,
             total_amount: 10000,
             tax_free_amount: 0,
-            approval_url: 'http://localhost:3001/user/approval',
-            cancel_url: 'http://localhost:3001/user/cancel',
-            fail_url: 'http://localhost:3001/user/fail',
+            approval_url: 'http://52.78.206.45:3001/user/approval',
+            cancel_url: 'http://52.78.206.45:3001/user/cancel',
+            fail_url: 'http://52.78.206.45:3001/user/fail',
         };
     
         try {
