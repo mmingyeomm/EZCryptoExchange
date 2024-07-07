@@ -12,7 +12,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     constructor(private readonly configService: ConfigService,
                 @Inject('AUTH_SERVICE') private readonly authService: AuthService,) {
         super({
-            clientID: process.env.GOOGLE_CLIENTID,
+            clientID: "44185310538-c107ojpnshc57dtkeipcm8nvc7glme5u.apps.googleusercontent.com",
             clientSecret: process.env.GOOGLE_SECRET,
             callbackURL: process.env.GOOGLE_CALLBACK_URL,
             scope: ['profile', 'email'],
