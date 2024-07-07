@@ -15,10 +15,10 @@ import { OrderModule } from './order/order.module';
     TypeOrmModule.forRoot({
 
     type: 'mysql',
-    host: 'localhost',
+    host: 'ezcryptoexchange.creye0kuc4ct.ap-northeast-2.rds.amazonaws.com',
     username: 'root',
     port: 3306,
-    password: 'root',
+    password: 'rootroot',
     database: 'ezcryptoexchange',
     entities: [User],
     synchronize: true,
