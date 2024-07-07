@@ -22,8 +22,12 @@ ENV NODE_ENV=${NODE_ENV}
 COPY --from=build /usr/src/app/dist ./dist
 COPY package*.json ./
 
+COPY .env .env
+
 RUN npm install --only=production
 RUN rm package*.json
+
+
 
 EXPOSE 3001
 
