@@ -16,6 +16,7 @@ import * as dotenv from 'dotenv';
 
 async function bootstrap() {
   dotenv.config();
+  console.log('GOOGLE_CLIENTID:', process.env.GOOGLE_CLIENTID);
   const app = await NestFactory.create(AppModule);
   app.use(session({
     secret: 'awefaedfawdagewgwsawedfag',
