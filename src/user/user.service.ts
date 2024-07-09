@@ -2,7 +2,7 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { AxiosResponse } from "axios";
 import { Observable, lastValueFrom } from "rxjs";
-import { AssetDto, UserAssetsDto, } from "./user.dto";
+import { AssetDto, TransactionDto, UserAssetsDto, UserTransactionsDTO, } from "./user.dto";
 import { UserRepository } from "./user.repository";
 
 @Injectable()
@@ -71,11 +71,31 @@ export class UserService {
         return {
           userId: user.id,
           email: user.email,
-          displayName: user.displayName,
-          walletAddress: user.walletAddress,
           assets: assetDtos,
         };
       }
     
+    async getUserTransactions(userId: number): Promise<UserTransactionsDTO>{
+        const user = await this.userRepository.getTransactionsWithUser(userId);
+
+        if (!user) {
+            throw new NotFoundException(`User with ID ${userId} not found`);
+          }
+        
+        const transactionDtos: TransactionDto[] = user.transactions.map(transaction => ({
+            id: transaction.id,
+            timestamp: transaction.timestamp,
+            name: transaction.name,
+            market: transaction.market,
+            type: transaction.type,
+            quantity: transaction.quantity
+          }));
+
+        return {
+            userId: user.id,
+            email: user.email,
+            transactions: transactionDtos,
+        }
+    }
     
 }

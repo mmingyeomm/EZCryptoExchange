@@ -14,8 +14,20 @@ export class AssetDto {
 export class UserAssetsDto {
     userId: number;
     email: string;
-    displayName: string;
-    walletAddress: string;
     assets: AssetDto[];
 }
 
+export class TransactionDto {
+    timestamp: string;
+    name: string;
+    market: string;
+    type: string;
+    quantity: number;
+}
+
+
+export class UserTransactionsDTO {
+    userId: number;
+    email: string;
+    transactionss: TransactionDto[];
+  }

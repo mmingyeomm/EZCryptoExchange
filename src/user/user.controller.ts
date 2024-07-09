@@ -16,7 +16,11 @@ export class UserController{
         return this.userService.getUserAssets(userId);
     }
 
-    
+    @Get(':userId/wallet/transactions')
+    async getUserWalletTransactions(@Param('userId') userId: number) {
+
+        return this.userService.getUserTransactions(userId);
+    }
 
 
 
