@@ -10,6 +10,10 @@ export class UserController{
         return this.userService.requestToKakaoPay();
     }
 
+    @Get('')
+
+
+
     @Get('approval')
     async approval() {
         return "approval";

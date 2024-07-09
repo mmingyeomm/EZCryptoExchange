@@ -28,8 +28,8 @@ export class authController {
 
     @Get('kakao/redirect')
     @UseGuards(KakaoAuthGuard)
-    handleRedirectKakao(@Req() req, @Res() res){
-        res.redirect('http://52.78.206.45:3001/');
+    handleRedirectKakao(){
+        return { msg: 'Kakao redirect'}
     }
 
 

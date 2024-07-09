@@ -3,7 +3,6 @@ import { Injectable } from "@nestjs/common";
 import { AxiosResponse } from "axios";
 import { Observable, lastValueFrom } from "rxjs";
 
-
 @Injectable()
 export class UserService {
     constructor(private readonly httpService: HttpService) {}

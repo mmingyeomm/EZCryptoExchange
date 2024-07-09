@@ -6,9 +6,10 @@ import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { DataSource } from 'typeorm';
 import { PassportModule } from '@nestjs/passport';
-import { WalletModule } from './wallet/wallet.module';
 import { TransactionModule } from './transaction/transaction.module';
-import { OrderModule } from './order/order.module';
+import { Transaction } from './transaction/transaction.entity';
+import { Asset } from './asset/asset.entity';
+import { AssetModule } from './asset/asset.module';
 
 @Module({
   imports: [ConfigModule.forRoot({isGlobal: true}), UserModule , AuthModule, 
@@ -20,11 +21,11 @@ import { OrderModule } from './order/order.module';
     port: 3306,
     password: 'rootroot',
     database: 'ezcryptoexchange',
-    entities: [User],
+    entities: [User, Transaction, Asset],
     synchronize: true,
 
   }), 
-  PassportModule.register({session:true}), WalletModule, TransactionModule, OrderModule, 
+  PassportModule.register({session:true}), TransactionModule, AssetModule
 ],
   controllers: [],
   providers: [],
