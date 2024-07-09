@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards} from "@nestjs/common";
+import { Controller, Get, Req, Res, UseGuards} from "@nestjs/common";
 import { GoogleAuthGuard, KakaoAuthGuard } from "./utils/Guards";
 import { Request } from 'express';
 
@@ -15,8 +15,8 @@ export class authController {
 
     @Get('google/redirect')
     @UseGuards(GoogleAuthGuard)
-    handleRedirectGoogle(){
-        return { msg: 'Google redirect'}
+    handleRedirectGoogle(@Req() req, @Res() res){
+        res.redirect('http://52.78.206.45:3001/');
     }
 
     @Get('kakao/login')
@@ -28,8 +28,8 @@ export class authController {
 
     @Get('kakao/redirect')
     @UseGuards(KakaoAuthGuard)
-    handleRedirectKakao(){
-        return { msg: 'Kakao redirect'}
+    handleRedirectKakao(@Req() req, @Res() res){
+        res.redirect('http://52.78.206.45:3001/');
     }
 
 
