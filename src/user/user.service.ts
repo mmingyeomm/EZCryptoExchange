@@ -76,6 +76,7 @@ export class UserService {
       }
     
     async getUserTransactions(userId: number): Promise<UserTransactionsDTO>{
+  
         const user = await this.userRepository.getTransactionsWithUser(userId);
 
         if (!user) {
@@ -91,6 +92,8 @@ export class UserService {
             quantity: transaction.quantity
           }));
 
+          console.log(transactionDtos)
+          console.log("userservice:getUserTransactions")
         return {
             userId: user.id,
             email: user.email,
