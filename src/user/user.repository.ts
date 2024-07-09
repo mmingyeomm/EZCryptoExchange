@@ -20,7 +20,7 @@ export class UserRepository extends Repository<User>{
 
     async getTransactionsWithUser(userId: number): Promise<User> {
         return this.createQueryBuilder('user')
-        .leftJoinAndSelect('transaction.assets', 'asset')
+        .leftJoinAndSelect('user.transactions', 'asset')
         .where('user.id = :userId', { userId })
         .getOne();
     }
