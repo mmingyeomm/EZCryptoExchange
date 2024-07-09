@@ -8,10 +8,10 @@ export class Asset {
   id: number;
 
   @Column()
-  name: string;
+  asset_name: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
-  average: number;
+  average_bought: number;
 
   @Column('decimal', { precision: 10, scale: 2 })
   bought: number;

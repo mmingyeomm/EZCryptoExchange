@@ -1,4 +1,4 @@
-import { DataSource, Repository } from "typeorm";
+import { DataSource, Repository, Transaction } from "typeorm";
 import { User } from "./user.entity";
 import { Injectable } from "@nestjs/common";
 
@@ -17,10 +17,6 @@ export class UserRepository extends Repository<User>{
           .getOne();
       }
 
-    async getTransactionsWithUser(userId: number): Promise<User> {
-        return this.createQueryBuilder('user')
-          .leftJoinAndSelect('user.transactions', 'asset')
-          .where('user.id = :userId', { userId })
-          .getOne();
-      }
+
+
 }
