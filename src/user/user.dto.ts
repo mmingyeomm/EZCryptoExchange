@@ -18,7 +18,7 @@ export class UserAssetsDto {
 }
 
 export class TransactionDto {
-    timestamp: string;
+    timestamp: Date;
     name: string;
     market: string;
     type: string;
@@ -29,5 +29,5 @@ export class TransactionDto {
 export class UserTransactionsDTO {
     userId: number;
     email: string;
-    transactionss: TransactionDto[];
+    transactions: TransactionDto[];
   }
