@@ -17,9 +17,12 @@ import { AssetModule } from './asset/asset.module';
 
     type: 'mysql',
     host: 'ezcryptoexchange.creye0kuc4ct.ap-northeast-2.rds.amazonaws.com',
+    
+    // host: 'localhost',
     username: 'root',
     port: 3306,
     password: 'rootroot',
+    // password: root,
     database: 'ezcryptoexchange',
     entities: [User, Transaction, Asset],
     synchronize: true,

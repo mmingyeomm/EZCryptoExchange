@@ -1,7 +1,7 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
 import { UserService } from "./user.service";
 
-@Controller("user")
+@Controller("users")
 export class UserController{
     constructor(private readonly userService:UserService){}
 
@@ -10,6 +10,13 @@ export class UserController{
         return this.userService.requestToKakaoPay();
     }
 
+    @Get(':userId/wallet/assets')
+    async getUserWalletAssets(@Param('userId') userId: number) {
+
+        return this.userService.getUserAssets(userId);
+    }
+
+    
     @Get('')
 
 
@@ -28,4 +35,6 @@ export class UserController{
     async fail() {
         return "fail";
     }
+
+
 }
