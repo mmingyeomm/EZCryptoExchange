@@ -1,5 +1,6 @@
 import { User } from 'src/user/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Status} from './transactions.enums';
 
 @Entity()
 export class Transaction {
@@ -20,6 +21,9 @@ export class Transaction {
 
   @Column('decimal', { precision: 10, scale: 2 })
   quantity: number;
+
+  @Column()
+  status: Status;
 
   @ManyToOne(() => User, user => user.transactions)
   user: User;

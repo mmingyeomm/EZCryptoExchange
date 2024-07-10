@@ -10,25 +10,30 @@ import { TransactionModule } from './transaction/transaction.module';
 import { Transaction } from './transaction/transaction.entity';
 import { Asset } from './asset/asset.entity';
 import { AssetModule } from './asset/asset.module';
+import { ChargeModule } from './charge/charge.module';
+import { Charge } from './charge/charge.entity';
 
 @Module({
   imports: [ConfigModule.forRoot({isGlobal: true}), UserModule , AuthModule, 
     TypeOrmModule.forRoot({
 
     type: 'mysql',
+
     host: 'ezcryptoexchange.creye0kuc4ct.ap-northeast-2.rds.amazonaws.com',
-    
     // host: 'localhost',
+
     username: 'root',
     port: 3306,
+
     password: 'rootroot',
-    // password: root,
+    // password: 'root',
+
     database: 'ezcryptoexchange',
-    entities: [User, Transaction, Asset],
+    entities: [User, Transaction, Asset, Charge],
     synchronize: true,
 
   }), 
-  PassportModule.register({session:true}), TransactionModule, AssetModule
+  PassportModule.register({session:true}), TransactionModule, AssetModule, ChargeModule
 ],
   controllers: [],
   providers: [],
