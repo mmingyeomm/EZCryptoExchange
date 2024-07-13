@@ -12,7 +12,7 @@ import { UserRepository } from 'src/user/user.repository';
           timeout: 5000,
           maxRedirects: 5,
         }),
-      }),],
+      }), ],
     providers: [ChargeRepository, ChargeService, UserService, UserRepository],
     controllers: [ChargeController]
 })
