@@ -1,30 +1,34 @@
-import { Controller, Get, Req, Res, UseGuards} from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from "@nestjs/common";
 import { GoogleAuthGuard, KakaoAuthGuard } from "./utils/Guards";
 import { Request } from 'express';
+import { AuthService } from "./auth.service";
 
 
 @Controller('api/auth')
 export class authController {
 
-    @Get('google/login')
-    @UseGuards(GoogleAuthGuard)
-    handleLoginGoogle() {
-        return { msg : 'Google Authentication'}
-    }
+    constructor(
+                private readonly authService: AuthService )
+    {}
+
+    // @Get('google/login')
+    // @UseGuards(GoogleAuthGuard)
+    // handleLoginGoogle() {
+    //     return { msg : 'Google Authentication'}
+    // }
     
 
-    @Get('google/redirect')
-    @UseGuards(GoogleAuthGuard)
-    handleRedirectGoogle(@Req() req, @Res() res){
-        res.redirect('http://52.78.206.45:3001/');
-    }
+    // @Get('google/redirect')
+    // @UseGuards(GoogleAuthGuard)
+    // handleRedirectGoogle(@Req() req, @Res() res){
+    //     res.redirect('http://52.78.206.45:3001/');
+    // }
 
-    @Get('kakao/login')
-    @UseGuards(KakaoAuthGuard)
-    handleLoginKakao() {
-        return { msg : 'Kakao Authentication'}
+    @Post('kakao/login')
+    @HttpCode(HttpStatus.OK)
+    async socialLogin(@Body('code') code: string) {
+        return this.authService.socialLogin(code);
     }
-    
 
     @Get('kakao/redirect')
     @UseGuards(KakaoAuthGuard)

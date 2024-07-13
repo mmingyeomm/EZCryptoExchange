@@ -1,4 +1,9 @@
 import { Module } from '@nestjs/common';
+import { AssetRepository } from './asset.repository';
 
-@Module({})
+@Module({
+
+
+    providers: [AssetRepository]
+})
 export class AssetModule {}

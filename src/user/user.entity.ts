@@ -19,6 +19,7 @@ export class User {
     @Column()
     walletAddress: string; 
 
+
     @OneToMany(() => Transaction, transaction => transaction.user)
     transactions: Transaction[];
   

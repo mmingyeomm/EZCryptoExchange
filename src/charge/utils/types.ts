@@ -4,3 +4,5 @@ export type ChargeDetails = {
     amount: number;
     userId: number;
 }
+
+export type ChargeState = 'Success' | 'Fail';
