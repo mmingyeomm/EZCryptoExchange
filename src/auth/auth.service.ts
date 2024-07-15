@@ -8,7 +8,7 @@ import axios from "axios";
 import { UserService } from "src/user/user.service";
 import { HttpService } from "@nestjs/axios";
 import { lastValueFrom } from "rxjs";
-
+import { AxiosResponse } from 'axios';
 
 
 @Injectable()

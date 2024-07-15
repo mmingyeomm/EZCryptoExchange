@@ -5,7 +5,7 @@ import { ChargeURLDTO } from "./charge.dto";
 import { lastValueFrom } from "rxjs";
 import { Charge } from "./charge.entity";
 import { UserService } from "src/user/user.service";
-import { ethers } from "ethers";
+import { Contract, ethers, Wallet } from "ethers";
 
 @Injectable()
 export class ChargeService {
@@ -62,33 +62,37 @@ export class ChargeService {
     }
 
     // kakaopay에 approve 보냄 
-    async approvePayment(userId: number,tid: string, partnerOrderId: string, pgToken: string) {
-
-        const url = 'https://open-api.kakaopay.com/online/v1/payment/approve';
-        const headers = {
-          'Authorization': 'SECRET_KEY DEVB707D3F985C29167F2EE70FE078541F72778F',
-          'Content-Type': 'application/json',
-        };
-        const data = {
-          cid: 'TC0ONETIME',
-          tid: tid,
-          partner_order_id: partnerOrderId,
-          partner_user_id: userId, // 이 값은 원래 요청에서 사용한 값과 일치해야 합니다
-          pg_token: pgToken
-        };
-        try {
-          const response = await lastValueFrom(
-            this.httpService.post(url, data, { headers })
-          );
-
-          return response.data;
-            }  catch (error) {
-              console.error('approvePayment Error:', error.response?.data || error.message);
-              console.error('Full error object:', error);
-              throw new Error(`Failed to approve Payment: ${error.message}`);
-            }
-
+    async approvePayment(userId: number, tid: string, partnerOrderId: string, pgToken: string) {
+      const url = 'https://open-api.kakaopay.com/online/v1/payment/approve';
+      const headers = {
+        'Authorization': 'SECRET_KEY DEVB707D3F985C29167F2EE70FE078541F72778F',
+        'Content-Type': 'application/json',
+      };
+      const data = {
+        cid: 'TC0ONETIME',
+        tid: tid,
+        partner_order_id: partnerOrderId,
+        partner_user_id: userId.toString(), // Convert to string to ensure compatibility
+        pg_token: pgToken
+      };
+  
+      try {
+        console.log('Sending approval request with data:', JSON.stringify(data));
+        const response = await lastValueFrom(
+          this.httpService.post(url, data, { headers })
+        );
+        console.log('Approval response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('approvePayment Error:', error.response?.data || error.message);
+        console.error('Full error object:', JSON.stringify(error, null, 2));
+        if (error.response) {
+          console.error('Response status:', error.response.status);
+          console.error('Response headers:', error.response.headers);
+        }
+        throw new Error(`Failed to approve Payment: ${error.message}`);
       }
+    }
     
     // state success로 바꾸기 
     async changeState(charge : Charge): Promise<boolean> {
@@ -125,7 +129,7 @@ export class ChargeService {
     //   }
     // }
 
-    async giveToken(): Promise<boolean> {
+    async giveToken(amount : number, to: string, walletPrivateKey: string): Promise<boolean> {
       // approve token
       let abi = [
         {
@@ -750,24 +754,30 @@ export class ChargeService {
           "type": "function"
         }
       ]
-      let provider = ethers.getDefaultProvider("https://eth-sepolia.g.alchemy.com/v2/demo");
 
-      let contractAddress = "0xbf1ebe5e3986301ad656835e96670f1e6958f55a08a29bb05d764873a08612e8"
+      // provider api key 
+      let provider = ethers.getDefaultProvider("https://sepolia.infura.io/v3/035c5c117cd649d7bdbb5ee61b3cb696");
+
+      let contractAddress = "0xfe2a1177ac7ea10e7fba0661a1282323d8df109f"
+
+      //private key 
+      const signer = new ethers.Wallet(walletPrivateKey, provider);
+
+      let contract = new Contract(contractAddress, abi, signer)
 
 
-      let privateKey = '0xaadc1ad2ae83f6ab618eb3aa02f6d03788a70aa5e6ef9d9b10eef89cadca3896';
-      let wallet = new ethers.Wallet(privateKey, provider);
+      let tx = await contract.approve(to, amount/1350);
+      let tx2 = await contract.transfer(to, amount/1350);
 
 
-      let USDT = new ethers.Contract(contractAddress, abi, wallet)
-
-      let tx = await USDT.approve('0xD7E283D171Aa9fdd4025E21628F4c99E188954fd', 1000);
-
-      console.log(tx.hash);
 
       await tx.wait();
+      await tx2.wait();
+      let balance = await contract.balanceOf(to)
 
-
+      console.log(tx.hash);
+      console.log(tx2.hash);
+      console.log(balance);
       // transfer token 
 
 

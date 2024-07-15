@@ -2,10 +2,13 @@ import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Pa
 import { ChargeService } from "./charge.service";
 import { ChargeAmountDTO } from "./charge.dto";
 import { ethers } from "ethers";
+import { UserRepository } from "src/user/user.repository";
 
 @Controller("charge")
 export class ChargeController{
-    constructor(private readonly chargeService:ChargeService){}
+    constructor(private readonly chargeService:ChargeService,
+                private readonly userRepository: UserRepository
+    ){}
 
     @Post(':userId/charge-amount')
     async chargeUser(@Body() chargeDTO: ChargeAmountDTO, @Param('userId') userId: number){
@@ -31,7 +34,11 @@ export class ChargeController{
       // 4. 사용자 잔액 업데이트
       // const updateAsset = await this.chargeService.changeAsset(charge);
       // 5. 지갑에 토큰 넣어주어야 됨. 
-      // const giveToken = await this.chargeService.giveToken(charge);
+      const giveToken = await this.chargeService.giveToken(
+          charge.amount, 
+          await this.userRepository.getwalletAddressWithUser(charge.user.id),
+          await this.userRepository.getwalletPrivateKeyWithUser(charge.user.id)
+        );
 
 
 
@@ -53,8 +60,8 @@ export class ChargeController{
 
     @Get('test')
     async test() {
-       const result = this.chargeService.giveToken()
-        return result;
+      //  const result = this.chargeService.giveToken()
+        // return result;
     }
 
     @Get('fail')
