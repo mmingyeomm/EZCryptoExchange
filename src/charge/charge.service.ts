@@ -77,15 +77,14 @@ export class ChargeService {
       };
   
       try {
-        console.log('Sending approval request with data:', JSON.stringify(data));
+        // console.log('Sending approval request with data:', JSON.stringify(data));
         const response = await lastValueFrom(
           this.httpService.post(url, data, { headers })
         );
-        console.log('Approval response:', response.data);
+        // console.log('Approval response:', response.data);
         return response.data;
+
       } catch (error) {
-        console.error('approvePayment Error:', error.response?.data || error.message);
-        console.error('Full error object:', JSON.stringify(error, null, 2));
         if (error.response) {
           console.error('Response status:', error.response.status);
           console.error('Response headers:', error.response.headers);
@@ -129,7 +128,7 @@ export class ChargeService {
     //   }
     // }
 
-    async giveToken(amount : number, to: string, walletPrivateKey: string): Promise<boolean> {
+    async giveToken(amount : number, to: string): Promise<boolean> {
       // approve token
       let abi = [
         {
@@ -754,22 +753,21 @@ export class ChargeService {
           "type": "function"
         }
       ]
-
+ 
       // provider api key 
-      let provider = ethers.getDefaultProvider("https://sepolia.infura.io/v3/035c5c117cd649d7bdbb5ee61b3cb696");
+      let provider = ethers.getDefaultProvider(`https://sepolia.infura.io/v3/${process.env.INFURA_TOKEN}`);
 
-      let contractAddress = "0xfe2a1177ac7ea10e7fba0661a1282323d8df109f"
+      let contractAddress = "0xb2502c8156B942eE525552EF518b2AD6239Cd484"
+      let walletPrivateKey = process.env.WALLET_PRIVATE_KEY;
+
 
       //private key 
       const signer = new ethers.Wallet(walletPrivateKey, provider);
 
       let contract = new Contract(contractAddress, abi, signer)
 
-
-      let tx = await contract.approve(to, amount/1350);
-      let tx2 = await contract.transfer(to, amount/1350);
-
-
+      let tx = await contract.approve(to, amount);
+      let tx2 = await contract.transfer(to, amount);
 
       await tx.wait();
       await tx2.wait();

@@ -8,7 +8,12 @@ export class ChargeRepository extends Repository<Charge>{
         super(Charge, dataSource.createEntityManager());
     }
 
-    
-    
+    async getUserWithCharge(chargeId: number): Promise<Charge> {
+        return this.createQueryBuilder("charge")
+            .leftJoinAndSelect("charge.user", "user")
+            .where("charge.id = :chargeId", { chargeId })
+            .getOne();
+    }
+
 
 }

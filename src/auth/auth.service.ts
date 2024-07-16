@@ -9,6 +9,7 @@ import { UserService } from "src/user/user.service";
 import { HttpService } from "@nestjs/axios";
 import { lastValueFrom } from "rxjs";
 import { AxiosResponse } from 'axios';
+import { JwtService } from "@nestjs/jwt";
 
 
 @Injectable()
@@ -16,7 +17,8 @@ export class AuthService{
 
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>,
                 private readonly userService: UserService,
-                private httpService: HttpService, )
+                private httpService: HttpService, 
+                private jwtService: JwtService,)
     {}
 
     async validateUser(details: UserDetails) {
@@ -52,9 +54,9 @@ export class AuthService{
             'https://kauth.kakao.com/oauth/token',
             {
               code,
-              client_id: 'ea6e7a064dd68c986c9c28153f2e9d4d',
-              client_secret: 'XT15CeDinRRx2M9Ju3h70S1AiDpghKjM',
-              redirect_uri: 'https://a0b9-121-161-195-61.ngrok-free.app/auth/callback',
+              client_id: process.env.KAKAO_CLIENT_ID,
+              client_secret: process.env.KAKAO_SECRET,
+              redirect_uri: `https://${process.env.FRONTEND_URL}/auth/callback`,
               grant_type: 'authorization_code',
             },
             {
@@ -88,11 +90,10 @@ export class AuthService{
             walletAddress: "1"
           });
     
-          // Generate JWT
-          // const token = this.jwtService.sign({ userId: user.id });
+          const token = this.jwtService.sign({ userId: user.id });
     
-          // return { token };
-          return user;
+          return { token };
+        
         } catch (error) {
           console.error('Error in social login:', error);
           throw error;

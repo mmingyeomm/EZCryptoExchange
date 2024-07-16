@@ -1,6 +1,7 @@
 import { DataSource, Repository, Transaction } from "typeorm";
 import { User } from "./user.entity";
 import { Injectable } from "@nestjs/common";
+import { Charge } from "src/charge/charge.entity";
 
 
 @Injectable()
@@ -51,4 +52,6 @@ export class UserRepository extends Repository<User>{
 
         return result.walletAddress;
     } 
+
+    
 }

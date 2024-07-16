@@ -9,17 +9,22 @@ import { KakaoStrategy } from './utils/strategies/kakao.strategy';
 import { UserService } from 'src/user/user.service';
 import { UserRepository } from 'src/user/user.repository';
 import { HttpModule, HttpService } from '@nestjs/axios';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
     imports: [
-      TypeOrmModule.forFeature([User]),
-      HttpModule.registerAsync({
-        useFactory: () => ({
-          timeout: 5000,
-          maxRedirects: 5,
+        TypeOrmModule.forFeature([User]),
+        HttpModule.registerAsync({
+          useFactory: () => ({
+            timeout: 5000,
+            maxRedirects: 5,
+          }),
         }),
-      }),
-    ],
+        JwtModule.register({
+          secret: 'abc123',
+          signOptions: { expiresIn: '2h' },
+        }),
+      ],
     controllers: [authController],
     providers: [
       AuthService,
