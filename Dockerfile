@@ -4,15 +4,9 @@ FROM node:18-alpine AS build
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .
-
-
-ENV MYSQL_PASSWORD=rootroot \
-    MYSQL_HOST='ezcryptoexchange.creye0kuc4ct.ap-northeast-2.rds.amazonaws.com'
-
 RUN npm run build
 
 # prod stage
@@ -25,12 +19,10 @@ ENV NODE_ENV=${NODE_ENV}
 
 COPY --from=build /usr/src/app/dist ./dist
 COPY package*.json ./
-
+COPY .env ./
 
 RUN npm install --only=production
 RUN rm package*.json
-
-
 
 EXPOSE 3001
 
