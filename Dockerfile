@@ -25,4 +25,6 @@ RUN rm package*.json
 
 EXPOSE 3001
 
+# Remove this line if it exists: COPY .env ./
+
 CMD [ "node", "dist/main.js" ]

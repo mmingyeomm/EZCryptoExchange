@@ -2,7 +2,11 @@ version: '3'
 
 services:
   backend:
-    build: ./
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: EZCryptoExchange
     env_file:
       - ./.env
@@ -10,5 +14,3 @@ services:
       - NODE_ENV=production
     ports:
       - "3001:3001"
-    volumes:
-      - ./.env:/usr/src/app/.env
