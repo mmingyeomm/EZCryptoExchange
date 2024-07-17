@@ -12,7 +12,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
   app.use(cors({
-    origin: 'https://dnkftcaem7gao.cloudfront.net'
+    origin: 'http://dnkftcaem7gao.cloudfront.net'
   }));
   app.use(session({
     secret: 'awefaedfawdagewgwsawedfag',
