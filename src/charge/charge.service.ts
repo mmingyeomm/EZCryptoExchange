@@ -34,9 +34,9 @@ export class ChargeService {
             total_amount: total_amount,
             quantity: 10,
             tax_free_amount: 0,
-            approval_url: `http://localhost:3001/charge/${userId.toString()}/approval?partner_order_id=${partner_order_id}`,
-            cancel_url: `http://localhost:3001/charge/${userId.toString()}/cancel?partner_order_id=${partner_order_id}`,
-            fail_url: `http://localhost:3001/charge/${userId.toString()}/fail?partner_order_id=${partner_order_id}`,
+            approval_url: `${process.env.BACKEND_URL}/charge/${userId.toString()}/approval?partner_order_id=${partner_order_id}`,
+            cancel_url: `${process.env.BACKEND_URL}/cancel?partner_order_id=${partner_order_id}`,
+            fail_url: `${process.env.BACKEND_URL}/fail?partner_order_id=${partner_order_id}`,
         };
     
         try {

@@ -19,13 +19,13 @@ import { Charge } from './charge/charge.entity';
 
     type: 'mysql',
 
-    host: 'ezcryptoexchange.creye0kuc4ct.ap-northeast-2.rds.amazonaws.com',
+    host: process.env.MYSQL_HOST,
     // host: 'localhost',
 
     username: 'root',
     port: 3306,
 
-    password: process.env.DB_PASSWORD,
+    password: process.env.MYSQL_PASSWORD,
     // password: 'root',
 
     database: 'ezcryptoexchange',
