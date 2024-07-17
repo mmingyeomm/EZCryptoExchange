@@ -19,6 +19,7 @@ import { Charge } from './charge/charge.entity';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
+        
         type: 'mysql',
         host: configService.get<string>('MYSQL_HOST'),
         port: 3306,

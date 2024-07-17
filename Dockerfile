@@ -9,6 +9,10 @@ RUN npm install
 
 COPY . .
 
+
+ENV MYSQL_PASSWORD=rootroot \
+    MYSQL_HOST='ezcryptoexchange.creye0kuc4ct.ap-northeast-2.rds.amazonaws.com'
+
 RUN npm run build
 
 # prod stage

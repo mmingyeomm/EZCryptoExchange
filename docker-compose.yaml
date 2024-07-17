@@ -6,7 +6,7 @@ services:
     container_name: EZCryptoExchange
 
     env_file:
-      - .env
+      - ./.env
     environment:
       - NODE_ENV=production
       - GOOGLE_CLIENTID=44185310538-c107ojpnshc57dtkeipcm8nvc7glme5u.apps.googleusercontent.com
