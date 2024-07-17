@@ -9,19 +9,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      
+      - name: Create .env file
+        run: |
+          echo "NODE_ENV=production" >> .env
+          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+          # Add other environment variables here
+      
       - name: Login Dockerhub
         env:
           DOCKER_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
           DOCKER_PASSWORD: ${{secrets.DOCKERHUB_TOKEN}}
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
+      
       - name: Build the Docker image
         run: docker build -t ezcryptoexchange .
-        
-      - name: tagging
+      
+      - name: Tag Docker image
         run: docker tag ezcryptoexchange:latest ${{ secrets.DOCKERHUB_USERNAME }}/ezcryptoexchange:latest
-
+      
       - name: Push to Dockerhub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/ezcryptoexchange:latest
-
-

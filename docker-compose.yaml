@@ -5,7 +5,7 @@ services:
     build: ./
     container_name: EZCryptoExchange
     env_file:
-      - .env
+      - ./.env
     environment:
       - NODE_ENV=production
     ports:
