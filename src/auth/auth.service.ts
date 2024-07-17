@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserDetails } from "./utils/types";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -56,7 +56,7 @@ export class AuthService{
               code,
               client_id: process.env.KAKAO_CLIENT_ID,
               client_secret: process.env.KAKAO_SECRET,
-              redirect_uri: `https://${process.env.FRONTEND_URL}/auth/callback`,
+              redirect_uri: `${process.env.KAKAO_CALLBACK_URL}`,
               grant_type: 'authorization_code',
             },
             {
@@ -67,42 +67,50 @@ export class AuthService{
           ));
     
           const accessToken = tokenResponse.data.access_token;
-    
-          // Get user info from social provider
-          const userInfoResponse = await lastValueFrom(this.httpService.get(
-            'https://kapi.kakao.com/v2/user/me',
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-              },
-            }
-          ));
-    
-          const socialUserInfo = userInfoResponse.data;
-          console.log(socialUserInfo);
-    
-          // Create or update user in your database
-          const user = await this.validateUser({
-            email: socialUserInfo.kakao_account.email,
-            displayName: socialUserInfo.properties.nickname,
-            walletPrivateKey: "1",
-            walletAddress: "1"
+
+          // 2. Use access token to get user info from Kakao
+          const userInfoResponse = await lastValueFrom(this.httpService.get('https://kapi.kakao.com/v2/user/me', {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }));
+
+          const kakaoUser = userInfoResponse.data;
+
+          console.log("kakaouserEntity : " + kakaoUser)
+          // 3. Find or create user in our database
+          let user = await this.userRepository.findOneBy({email: kakaoUser.email});
+          if (user) return user;
+          const wallet = ethers.Wallet.createRandom()
+          if (!user) {
+            this.userRepository.save(user);({
+              email: kakaoUser.kakao_account.email,
+              name: kakaoUser.properties.nickname,
+              walletPrivateKey : wallet.privateKey,
+              walletAddress : wallet.address,
+            });
+          }
+
+          // 4. Generate JWT
+          const jwt = this.jwtService.sign({ 
+            userId: user.id,
+            email: user.email,
           });
-    
-          const token = this.jwtService.sign({ userId: user.id });
-    
-          return { token };
-        
+
+          // 5. Return JWT and user info
+          return {
+            access_token: jwt,
+            user: {
+              id: user.id,
+              email: user.email,
+            },
+          };
+
         } catch (error) {
-          console.error('Error in social login:', error);
-          throw error;
+          throw new HttpException('Failed to authenticate with Kakao', HttpStatus.UNAUTHORIZED);
         }
-      }
+
+    }
+
+
 
 }
-
-
-
-
 
