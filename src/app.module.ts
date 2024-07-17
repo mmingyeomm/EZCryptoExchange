@@ -25,7 +25,7 @@ import { Charge } from './charge/charge.entity';
     username: 'root',
     port: 3306,
 
-    password: 'rootroot',
+    password: process.env.DB_PASSWORD,
     // password: 'root',
 
     database: 'ezcryptoexchange',

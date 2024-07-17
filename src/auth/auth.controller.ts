@@ -1,7 +1,8 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, Res, UseGuards} from "@nestjs/common";
 import { GoogleAuthGuard, KakaoAuthGuard } from "./utils/Guards";
 import { Request } from 'express';
 import { AuthService } from "./auth.service";
+import { ChargeAmountDTO } from "src/charge/charge.dto";
 
 
 @Controller('api/auth')
@@ -26,12 +27,14 @@ export class authController {
 
     @Post('kakao/redirect')
     @HttpCode(HttpStatus.OK)
-    @UseGuards(KakaoAuthGuard)
     async socialLogin(@Body('code') code: string) {
         console.log("kakao redirect")
+        console.log(code)
         return this.authService.socialLogin(code);
     }
 
+
+   
     @Get('kakao/login')
     @UseGuards(KakaoAuthGuard)
     handleRedirectKakao(){

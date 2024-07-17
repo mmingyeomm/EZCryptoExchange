@@ -11,9 +11,11 @@ async function bootstrap() {
   dotenv.config();
 
   const app = await NestFactory.create(AppModule);
-  app.use(cors({
-    origin: 'http://dnkftcaem7gao.cloudfront.net'
-  }));
+  app.enableCors({
+    origin: '*', // Allow all origins
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
   app.use(session({
     secret: 'awefaedfawdagewgwsawedfag',
     saveUninitialized: false,

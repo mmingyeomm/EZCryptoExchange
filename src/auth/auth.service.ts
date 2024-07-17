@@ -49,11 +49,12 @@ export class AuthService{
     
     async socialLogin(code: string) {
         try {
+          console.log("sociallogin")
           // Exchange code for access token
           const tokenResponse = await lastValueFrom(this.httpService.post(
             'https://kauth.kakao.com/oauth/token',
             {
-              code,
+              code: code,
               client_id: process.env.KAKAO_CLIENT_ID,
               client_secret: process.env.KAKAO_SECRET,
               redirect_uri: `${process.env.KAKAO_CALLBACK_URL}`,
@@ -65,9 +66,9 @@ export class AuthService{
               },
             }
           ));
-    
+          console.log(tokenResponse)
           const accessToken = tokenResponse.data.access_token;
-
+          console.log(accessToken)
           // 2. Use access token to get user info from Kakao
           const userInfoResponse = await lastValueFrom(this.httpService.get('https://kapi.kakao.com/v2/user/me', {
             headers: { Authorization: `Bearer ${accessToken}` },
