@@ -5,19 +5,15 @@ import { ConfigService } from '@nestjs/config';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as dotenv from 'dotenv';
-
-//1. backend 로그인 
-//2. ethers js로 로그인 시에 지갑 생성되는 로직 
-//3. 카카오 페이로 돈 입금시에 지갑에 해당되는 usdt 구입해주는 로직  (컨트랙트로)
-//4. 마켓 플레이스 로직   
-//5. 마켓플레이스에서 구입 클릭시에 uniswap 호출 
-//6. 
-
+import * as cors from 'cors';
 
 async function bootstrap() {
   dotenv.config();
 
   const app = await NestFactory.create(AppModule);
+  app.use(cors({
+    origin: 'https://dnkftcaem7gao.cloudfront.net'
+  }));
   app.use(session({
     secret: 'awefaedfawdagewgwsawedfag',
     saveUninitialized: false,
@@ -25,7 +21,7 @@ async function bootstrap() {
     cookie: {
       maxAge: 60000,
     }
-  }))
+  }));
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -36,12 +32,14 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('cats')
     .build();
-    const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   const configService = app.get(ConfigService);
-  const port = configService.get<number>('APP_PORT')
+  const port = configService.get<number>('APP_PORT') || 3001;
 
-  await app.listen(3001); //port 원래
+  await app.listen(port);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
+
 bootstrap();
