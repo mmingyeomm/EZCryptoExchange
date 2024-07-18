@@ -7,10 +7,16 @@ on:
       - completed
 
 jobs:
-  build:
+  deploy:
     runs-on: self-hosted
 
     steps:
+      - name: Create .env file
+        run: |
+          echo "NODE_ENV=production" >> .env
+          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+          # Add any other environment variables here
+        
       - name: Pull Docker image
         run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ezcryptoexchange:latest
 
@@ -18,4 +24,9 @@ jobs:
         run: sudo docker rm -f ezcryptoexchange || true
 
       - name: Run Docker Container
-        run: sudo docker run -d -p 3001:3001 --name ezcryptoexchange ${{ secrets.DOCKERHUB_USERNAME }}/ezcryptoexchange
+        run: |
+          sudo docker run -d \
+            -p 3001:3001 \
+            --name ezcryptoexchange \
+            --env-file .env \
+            ${{ secrets.DOCKERHUB_USERNAME }}/ezcryptoexchange

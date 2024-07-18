@@ -9,9 +9,10 @@ import * as cors from 'cors';
 
 async function bootstrap() {
   dotenv.config();
-  console.log(process.env.MYSQL_PASSWORD)
-
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  console.log('MYSQL_PASSWORD:', configService.get<string>('MYSQL_PASSWORD'));
+
   app.enableCors({
     origin: '*', // Allow all origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
@@ -38,7 +39,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  const configService = app.get(ConfigService);
   const port = configService.get<number>('APP_PORT') || 3001;
 
   await app.listen(port);
