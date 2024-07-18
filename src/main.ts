@@ -11,7 +11,7 @@ async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  console.log('MYSQL_PASSWORD:', configService.get<string>('MYSQL_PASSWORD'));
+  console.log(process.env.MYSQL_PASSWORD);
 
   app.enableCors({
     origin: '*', // Allow all origins
