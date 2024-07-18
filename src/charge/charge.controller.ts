@@ -13,10 +13,12 @@ export class ChargeController{
     ){}
 
     @Post(':userId/charge-amount')
-    async chargeUser(@Body() chargeDTO: ChargeAmountDTO, @Param('userId') userId: number){
-
-        return  this.chargeService.requestToKakaoPay(userId, chargeDTO.amount);
-
+    async chargeUser(
+      @Body() chargeDto: ChargeAmountDTO,
+      @Param('userId') userId: number
+    ) {
+      console.log('Received charge request:', { userId, amount: chargeDto.amount });
+      return this.chargeService.requestToKakaoPay(userId, chargeDto.amount);
     }
 
     @Get(':userId/approval')

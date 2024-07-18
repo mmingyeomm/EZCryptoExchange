@@ -57,7 +57,7 @@ export class AuthService{
               code: code,
               client_id: process.env.KAKAO_CLIENT_ID,
               client_secret: process.env.KAKAO_SECRET,
-              redirect_uri: `${process.env.KAKAO_CALLBACK_URL}`,
+              redirect_uri: process.env.KAKAO_CALLBACK_URL,
               grant_type: 'authorization_code',
             },
             {

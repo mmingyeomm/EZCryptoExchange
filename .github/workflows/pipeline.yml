@@ -14,10 +14,23 @@ jobs:
       - name: Create .env file
         run: |
           echo "NODE_ENV=production" >> .env
+          echo "GOOGLE_CLIENTID=${{ secrets.GOOGLE_CLIENTID }}" >> .env
+          echo "GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}" >> .env
+          echo "APP_PORT=${{ secrets.APP_PORT }}" >> .env
+          echo "GOOGLE_CALLBACK_URL=${{ secrets.GOOGLE_CALLBACK_URL }}" >> .env
+          echo "KAKAO_CLIENTID=${{ secrets.KAKAO_CLIENTID }}" >> .env
+          echo "KAKAO_SECRET=${{ secrets.KAKAO_SECRET }}" >> .env
+          echo "KAKAO_CALLBACK_URL=${{ secrets.KAKAO_CALLBACK_URL }}" >> .env
+          echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> .env
+          echo "KAKAOPAY_SECRET=${{ secrets.KAKAOPAY_SECRET }}" >> .env
+          echo "WALLET_PRIVATE_KEY=${{ secrets.WALLET_PRIVATE_KEY }}" >> .env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+          echo "INFURA_TOKEN=${{ secrets.INFURA_TOKEN }}" >> .env
           echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
           echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
-          # Add any other environment variables here
-        
+          echo "BACKEND_URL=${{ secrets.BACKEND_URL }}" >> .env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+
       - name: Debug - Print .env contents
         run: |
           echo "Contents of .env file:"

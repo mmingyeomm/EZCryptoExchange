@@ -15,50 +15,50 @@ export class ChargeService {
             ) {}  
     // 처음 pay request가 왔을 때, 카카오페이에게 url 요청 
     async requestToKakaoPay(userId: number, total_amount: number): Promise<ChargeURLDTO> {
+      console.log('Received parameters:', { userId, total_amount });
+      total_amount = 1000
 
-        const url = 'https://open-api.kakaopay.com/online/v1/payment/ready';
-        const headers = {
-            
-            'Authorization': 'SECRET_KEY DEVB707D3F985C29167F2EE70FE078541F72778F', // 실제 API 키로 대체
-            'Content-Type': 'application/json',
-
-        };
-
-        const partner_order_id = `order_${userId}_${Date.now()}`;
-
-        const data = {
-            cid: 'TC0ONETIME',  // 테스트 코드
-            partner_order_id: partner_order_id,
-            partner_user_id: userId.toString(),
-            item_name: '요금 충전',
-            total_amount: total_amount,
-            quantity: 10,
-            tax_free_amount: 0,
-            approval_url: `${process.env.BACKEND_URL}/charge/${userId.toString()}/approval?partner_order_id=${partner_order_id}`,
-            cancel_url: `${process.env.BACKEND_URL}/cancel?partner_order_id=${partner_order_id}`,
-            fail_url: `${process.env.BACKEND_URL}/fail?partner_order_id=${partner_order_id}`,
-        };
+      const url = 'https://open-api.kakaopay.com/online/v1/payment/ready';
+      const headers = {
+        'Authorization': `SECRET_KEY ${process.env.KAKAOPAY_SECRET}`,
+        'Content-Type': 'application/json',
+      };
     
-        try {
-
-          const response = await lastValueFrom(
-              this.httpService.post(url, data, { headers })
-          );
-          const nextRedirectPcUrl: string = response.data.next_redirect_pc_url;
-          const tid: string = response.data.tid;
-        
-          this.createCharge(tid, partner_order_id,total_amount, userId)
-          return {
-            next_redirect_pc_url: nextRedirectPcUrl,
-            tid : tid,
-          };
-
-          
-          } catch (error) {
-              console.error('Kakao Pay request error:', error.response?.data || error.message);
-              console.error('Full error object:', error);
-              throw new Error(`Failed to request Kakao Pay: ${error.message}`);
-          }
+      const partner_order_id = `order_${userId}_${Date.now()}`;
+    
+      const data = {
+        cid: 'TC0ONETIME',
+        partner_order_id: partner_order_id,
+        partner_user_id: userId.toString(),
+        item_name: '요금 충전',
+        total_amount: total_amount,  // Use the passed total_amount here
+        quantity: 1,  // Changed from 10 to 1, as it's more logical for a charge amount
+        tax_free_amount: 0,
+        approval_url: `${process.env.BACKEND_URL}/charge/${userId.toString()}/approval?partner_order_id=${partner_order_id}`,
+        cancel_url: `${process.env.BACKEND_URL}/charge/cancel?partner_order_id=${partner_order_id}`,
+        fail_url: `${process.env.BACKEND_URL}/charge/fail?partner_order_id=${partner_order_id}`,
+      };
+    
+      console.log('Request data:', data);
+    
+      try {
+        const response = await lastValueFrom(
+          this.httpService.post(url, data, { headers })
+        );
+        console.log('Kakao Pay response:', response.data);
+        const nextRedirectPcUrl: string = response.data.next_redirect_pc_url;
+        const tid: string = response.data.tid;
+    
+        await this.createCharge(tid, partner_order_id, total_amount, userId);
+        return {
+          next_redirect_pc_url: nextRedirectPcUrl,
+          tid: tid,
+        };
+      } catch (error) {
+        console.error('Kakao Pay request error:', error.response?.data || error.message);
+        console.error('Full error object:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+        throw new Error(`Failed to request Kakao Pay: ${error.message}`);
+      }
     }
 
     // kakaopay에 approve 보냄 
