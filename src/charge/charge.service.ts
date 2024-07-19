@@ -7,12 +7,17 @@ import { Charge } from "./charge.entity";
 import { UserService } from "src/user/user.service";
 import { Contract, ethers, Wallet } from "ethers";
 import { ChargeURLDTO } from "./dto/charge.dto";
+import { Asset } from "src/asset/asset.entity";
+import { UserRepository } from "src/user/user.repository";
+import { AssetRepository } from "src/asset/asset.repository";
 
 @Injectable()
 export class ChargeService {
     constructor(private readonly httpService: HttpService,
                 private readonly chargeRepository: ChargeRepository,
                 private readonly userService: UserService,
+                private readonly userRepository: UserRepository,
+                private readonly assetRepository: AssetRepository
             ) {}  
     // 처음 pay request가 왔을 때, 카카오페이에게 url 요청 
     async requestToKakaoPay(userId: number, total_amount: number): Promise<ChargeURLDTO> {
@@ -811,5 +816,43 @@ export class ChargeService {
         return this.chargeRepository.save(newCharge);
     }
 
-    
+    async updateAsset(userId: number, chargeAmount: number, assetName: string): Promise<Asset> {
+      // Find the user
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+        relations: ['assets']
+      });
+  
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+  
+      // Find or create the asset for this user
+      let asset = user.assets.find(a => a.asset_name === assetName);  // Assuming 'KRW' is the asset name for Korean Won
+  
+      if (!asset) {
+        // If the asset doesn't exist, create a new one
+        asset = new Asset();
+        asset.asset_name = assetName;
+        asset.user = user;
+        asset.average_bought = chargeAmount;
+        asset.bought = chargeAmount;
+        asset.amount = chargeAmount/1350;
+        asset.price = 1;  
+        asset.total_price = chargeAmount;
+        asset.ROI = 0;
+        asset.Return = 0;
+      } else {
+        // If the asset exists, update it
+        const newTotalAmount = asset.amount + chargeAmount;
+        asset.average_bought = (asset.average_bought * asset.amount + chargeAmount) / newTotalAmount;
+        asset.bought += chargeAmount;
+        asset.amount = newTotalAmount;
+        asset.total_price += chargeAmount;
+        // ROI and Return calculations might need to be adjusted based on your business logic
+      }
+  
+      // Save the updated or new asset
+      return this.assetRepository.save(asset);
+    }
 }

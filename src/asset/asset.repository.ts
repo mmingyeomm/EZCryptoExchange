@@ -8,7 +8,7 @@ export class AssetRepository extends Repository<Asset>{
         super(Asset, dataSource.createEntityManager());
     }
 
-    
+    async 
     
 
 }

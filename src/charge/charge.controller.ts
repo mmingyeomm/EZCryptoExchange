@@ -5,12 +5,14 @@ import { ethers } from "ethers";
 import { UserRepository } from "src/user/user.repository";
 import { ChargeRepository } from "./charge.repository";
 import { ChargeAmountDTO } from "./dto/charge.dto";
+import { AssetRepository } from "src/asset/asset.repository";
 
 @Controller("charge")
 export class ChargeController{
     constructor(private readonly chargeService:ChargeService,
                 private readonly chargeRepository:ChargeRepository,
-                private readonly userRepository: UserRepository
+                private readonly userRepository: UserRepository,
+                private readonly assetRepository: AssetRepository
     ){}
 
     @Post(':userId/charge-amount')
@@ -54,14 +56,14 @@ export class ChargeController{
       // 3. 결제 정보 업데이트 //enum 만들고 default를 승인 안됨으로 
       const changeState = await this.chargeService.changeState(charge);
       // 4. 사용자 잔액 업데이트
-      // const updateAsset = await this.chargeService.changeAsset(charge);
-      // 5. 지갑에 토큰 넣어주어야 됨. 
-
 
       const giveToken = await this.chargeService.giveToken(
           charge.amount, 
           await this.userRepository.getwalletAddressWithUser(user.user.id),
         );
+
+        // const updatedAsset = await this.chargeService.updateAsset(userId, charge.amount, "USDT");
+      // 5. 지갑에 토큰 넣어주어야 됨. 
 
 
 
