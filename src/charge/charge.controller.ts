@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Param, Post, Query, Req } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpCode, HttpException, HttpStatus, NotFoundException, Param, Post, Query, Req } from "@nestjs/common";
 import { ChargeService } from "./charge.service";
-import { ChargeAmountDTO } from "./charge.dto";
+
 import { ethers } from "ethers";
 import { UserRepository } from "src/user/user.repository";
 import { ChargeRepository } from "./charge.repository";
+import { ChargeAmountDTO } from "./dto/charge.dto";
 
 @Controller("charge")
 export class ChargeController{
@@ -13,13 +14,29 @@ export class ChargeController{
     ){}
 
     @Post(':userId/charge-amount')
+    @HttpCode(HttpStatus.OK)
     async chargeUser(
-      @Body() chargeDto: ChargeAmountDTO,
+      @Body() rawBody: any,
       @Param('userId') userId: number
     ) {
-      console.log('Received charge request:', { userId, amount: chargeDto.amount });
-      return this.chargeService.requestToKakaoPay(userId, chargeDto.amount);
+      let amount: number;
+      try {
+        const jsonString = Object.keys(rawBody)[0];
+        const parsedBody = JSON.parse(jsonString);
+        amount = Number(parsedBody.amount);
+        if (isNaN(amount)) {
+          throw new Error('Amount is not a valid number');
+        }
+      } catch (error) {
+        console.error('Error parsing amount:', error);
+        throw new BadRequestException('Invalid request body format');
+      }
+  
+      console.log('Parsed amount:', amount);
+
+      return this.chargeService.requestToKakaoPay(userId, amount);
     }
+
 
     @Get(':userId/approval')
     async approvePayment(@Param('userId') userId: number, @Query('partner_order_id') partnerOrderId: string, @Query('pg_token') pgToken: string) {

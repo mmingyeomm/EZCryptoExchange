@@ -21,12 +21,12 @@ import { Charge } from './charge/charge.entity';
       useFactory: (configService: ConfigService) => ({
         
         type: 'mysql',
-        host: configService.get<string>('MYSQL_HOST'),
-        // host: 'localhost',
+        // host: configService.get<string>('MYSQL_HOST'),
+        host: 'localhost',
         port: 3306,
         username: 'root',
-        password: configService.get<string>('MYSQL_PASSWORD'),
-        // password: 'root',
+        // password: configService.get<string>('MYSQL_PASSWORD'),
+        password: 'root',
         database: 'ezcryptoexchange',
         entities: [User, Transaction, Asset, Charge],
         synchronize: true,

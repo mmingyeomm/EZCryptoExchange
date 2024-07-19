@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, Res, UseGuards} from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, Res, UseGuards} from "@nestjs/common";
 import { GoogleAuthGuard, KakaoAuthGuard } from "./utils/Guards";
 import { Request } from 'express';
 import { AuthService } from "./auth.service";
-import { ChargeAmountDTO } from "src/charge/charge.dto";
+import { SocialLoginDTO } from "./dto/auth.dto";
+
 
 
 @Controller('api/auth')
@@ -27,13 +28,26 @@ export class authController {
 
     @Post('kakao/redirect')
     @HttpCode(HttpStatus.OK)
-    async socialLogin(@Body('code') code: string) {
+    async socialLogin(@Body() rawBody: any,) {
         console.log("kakao redirect")
-        console.log(code)
+        console.log(rawBody)
+        let code: string;
+        try {
+            const jsonString = Object.keys(rawBody)[0];
+            const parsedBody = JSON.parse(jsonString);
+            code = String(parsedBody.code);
+
+        } catch (error) {
+            console.error('Error parsing amount:', error);
+            throw new BadRequestException('Invalid request body format');
+        }
+    
+        console.log('Parsed amount:', code);
+        
         return this.authService.socialLogin(code);
+
+
     }
-
-
    
     @Get('kakao/login')
     @UseGuards(KakaoAuthGuard)

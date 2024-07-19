@@ -6,11 +6,14 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import * as dotenv from 'dotenv';
 import * as cors from 'cors';
+import { json, urlencoded } from 'express';
+import * as rawBody from 'raw-body';
 
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+
   console.log(process.env.MYSQL_PASSWORD);
 
   app.enableCors({
@@ -18,6 +21,22 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
+
+  // Add body parsing middleware
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
+
+  // Add raw body logging middleware
+  app.use(async (req, res, next) => {
+    if (req.headers['content-type'] === 'application/json') {
+      const raw = await rawBody(req);
+      console.log('Raw request body:', raw.toString());
+      // Restore the request body for further processing
+      req.body = JSON.parse(raw.toString());
+    }
+    next();
+  });
+
   app.use(session({
     secret: 'awefaedfawdagewgwsawedfag',
     saveUninitialized: false,

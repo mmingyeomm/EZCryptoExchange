@@ -1,11 +1,12 @@
 import { HttpService } from "@nestjs/axios";
 import { ChargeRepository } from "./charge.repository";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { ChargeURLDTO } from "./charge.dto";
+
 import { lastValueFrom } from "rxjs";
 import { Charge } from "./charge.entity";
 import { UserService } from "src/user/user.service";
 import { Contract, ethers, Wallet } from "ethers";
+import { ChargeURLDTO } from "./dto/charge.dto";
 
 @Injectable()
 export class ChargeService {
@@ -16,7 +17,6 @@ export class ChargeService {
     // 처음 pay request가 왔을 때, 카카오페이에게 url 요청 
     async requestToKakaoPay(userId: number, total_amount: number): Promise<ChargeURLDTO> {
       console.log('Received parameters:', { userId, total_amount });
-      total_amount = 1000
 
       const url = 'https://open-api.kakaopay.com/online/v1/payment/ready';
       const headers = {
