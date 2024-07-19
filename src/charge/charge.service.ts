@@ -831,6 +831,7 @@ export class ChargeService {
       let asset = user.assets.find(a => a.asset_name === assetName);  // Assuming 'KRW' is the asset name for Korean Won
   
       if (!asset) {
+        console.log("not bought")
         // If the asset doesn't exist, create a new one
         asset = new Asset();
         asset.asset_name = assetName;
@@ -843,8 +844,10 @@ export class ChargeService {
         asset.ROI = 0;
         asset.Return = 0;
       } else {
+        console.log("bought already")
         // If the asset exists, update it
         const newTotalAmount = asset.amount + chargeAmount;
+        console.log("new total amount: " + newTotalAmount )
         asset.average_bought = (asset.average_bought * asset.amount + chargeAmount) / newTotalAmount;
         asset.bought += chargeAmount;
         asset.amount = newTotalAmount;
