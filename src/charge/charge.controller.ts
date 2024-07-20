@@ -18,34 +18,10 @@ export class ChargeController{
     @Post(':userId/charge-amount')
     @HttpCode(HttpStatus.OK)
     async chargeUser(
-      @Body() body: any,
+      @Body('amount') amount: number,
       @Param('userId') userId: number
     ) {
-      let amount: number;
-      try {
-        const jsonString = Object.keys(body)[0];
-
-        if (typeof body !== 'object' || body === null || !('amount' in body)) {
-          throw new Error('Invalid JSON format: missing "amount" field');
-        }
-    
-        // Check if amount is a string (as it's sent from the client)
-        if (typeof body.amount !== 'string') {
-          throw new Error('Invalid amount format: expected string');
-        }
-        
-        const parsedBody = JSON.parse(jsonString);
-        amount = Number(parsedBody.amount);
-        if (isNaN(amount)) {
-          throw new Error('Amount is not a valid number');
-        }
-      } catch (error) {
-        console.error('Error parsing amount:', error);
-        throw new BadRequestException('Invalid request body format');
-      }
-  
-      console.log('Parsed amount:', amount);
-
+      
       return this.chargeService.requestToKakaoPay(userId, amount);
     }
 

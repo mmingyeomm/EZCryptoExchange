@@ -28,23 +28,12 @@ export class authController {
 
     @Post('kakao/redirect')
     @HttpCode(HttpStatus.OK)
-    async socialLogin(@Body() rawBody: any,) {
+    async socialLogin(@Body('code') socialLoginDTO: SocialLoginDTO) {
         console.log("kakao redirect")
-        console.log(rawBody)
-        let code: string;
-        try {
-            const jsonString = Object.keys(rawBody)[0];
-            const parsedBody = JSON.parse(jsonString);
-            code = String(parsedBody.code);
+        console.log(socialLoginDTO)
 
-        } catch (error) {
-            console.error('Error parsing amount:', error);
-            throw new BadRequestException('Invalid request body format');
-        }
-    
-        console.log('Parsed amount:', code);
         
-        return this.authService.socialLogin(code);
+        return this.authService.socialLogin(socialLoginDTO.code);
 
 
     }
