@@ -26,7 +26,7 @@ export class UserRepository extends Repository<User>{
         .getOne();
     }
 
-    async getwalletPrivateKeyWithUser(userId: number): Promise<string> {
+    async getWalletPrivateKeyWithUserId(userId: number): Promise<string> {
         const result = await this.createQueryBuilder('user')
             .select('user.walletPrivateKey')
             .where('user.id = :userId', { userId })
@@ -37,8 +37,7 @@ export class UserRepository extends Repository<User>{
         }
 
         return result.walletPrivateKey;
-    } 
-
+    }
 
     async getwalletAddressWithUser(userId: number): Promise<string> {
         const result = await this.createQueryBuilder('user')

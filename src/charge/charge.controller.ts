@@ -71,8 +71,7 @@ export class ChargeController{
 
     @Get('test')
     async test() {
-      //  const result = this.chargeService.giveToken()
-        // return result;
+       const result = this.chargeService.approve("0x6Fe3a78449EB561C20C13BeD1d10fe817B025931", 1000000)
     }
 
     @Get('fail')

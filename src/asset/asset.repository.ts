@@ -8,7 +8,19 @@ export class AssetRepository extends Repository<Asset>{
         super(Asset, dataSource.createEntityManager());
     }
 
-    async 
     
+    async getAmount(assetName: string, userId: number): Promise<number | null> {
+        const asset = await this.findOne({
+            where: {
+                asset_name: assetName,
+                user: { id: userId }
+            }
+        });
 
+        if (asset) {
+            return asset.amount;
+        }
+
+        return null; // Return null if the asset is not found
+    }
 }
