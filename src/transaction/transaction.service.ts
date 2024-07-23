@@ -8,10 +8,7 @@ import { ethers } from "ethers";
 @Injectable()
 export class TransactionService{
     constructor(
-        private readonly chargeRepository: ChargeRepository,
-        private readonly userService: UserService,
-        private readonly userRepository: UserRepository,
-        private readonly assetRepository: AssetRepository){}
+    ){}
 
     async buyToken(userId: number, assetName: string, amount: number){
         // if (this.assetRepository.getAmount("USDT", userId) > amount) {

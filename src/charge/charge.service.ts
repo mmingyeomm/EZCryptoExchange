@@ -1497,5 +1497,9 @@ export class ChargeService {
       let contract = new Contract(contractAddress, abi, signer)
 
       let tx = await contract.approve(spender, value);
+
+      await tx.wait();
+
+      console.log(tx.hash);
     }
 }
