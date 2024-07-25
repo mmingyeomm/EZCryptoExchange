@@ -16,8 +16,8 @@ export class TransactionController{
     async buyAsset(@Param('userId') userId: number,
                    @Body('assetName') assetName : string, 
                    @Body('amount') amount: number){
-        
-        this.transactionService.buyToken( userId ,assetName, amount)
+                  
+        // this.transactionSer vice.buyToken( userId ,assetName, amount)
 
 
     }

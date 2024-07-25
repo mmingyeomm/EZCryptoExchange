@@ -71,7 +71,7 @@ export class ChargeController{
 
     @Get('test')
     async test() {
-       const result = this.chargeService.approve("0x6Fe3a78449EB561C20C13BeD1d10fe817B025931", 1000000)
+       const result = await this.chargeService.approve("0xc4a29aEc039EbaB1e637Bd318A1916B12A4f6163", 1000000)
     }
 
     @Get('fail')
