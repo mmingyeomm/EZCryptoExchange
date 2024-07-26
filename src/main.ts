@@ -5,55 +5,52 @@ import { ConfigService } from '@nestjs/config';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as dotenv from 'dotenv';
-import * as cors from 'cors';
 import { json, urlencoded } from 'express';
-import * as rawBody from 'raw-body';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  console.log(process.env.MYSQL_PASSWORD);
-
+  // Update CORS configuration
+  const corsOrigin = 'https://ezcryptoexchange.shop';
   app.enableCors({
-    origin: '*', // Allow all origins
+    origin: corsOrigin,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization',
   });
 
   // Add body parsing middleware
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
 
-  // Add raw body logging middleware
-  app.use(async (req, res, next) => {
-    if (req.headers['content-type'] === 'application/json') {
-      const raw = await rawBody(req);
-      console.log('Raw request body:', raw.toString());
-      // Restore the request body for further processing
-      req.body = JSON.parse(raw.toString());
-    }
-    next();
-  });
-
   app.use(session({
-    secret: 'awefaedfawdagewgwsawedfag',
+    secret: configService.get<string>('SESSION_SECRET') || 'your-secret-key',
     saveUninitialized: false,
     resave: false,
     cookie: {
       maxAge: 60000,
+      secure: true, // Set this to true for HTTPS
+      sameSite: 'none', // This allows cross-site cookie setting
     }
   }));
 
   app.use(passport.initialize());
   app.use(passport.session());
 
+  // Add global validation pipe
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }));
+
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Your API Title')
+    .setDescription('Your API Description')
     .setVersion('1.0')
-    .addTag('cats')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

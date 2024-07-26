@@ -1,6 +1,6 @@
 import { User } from 'src/user/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
-import { Status} from './transactions.enums';
+import { Status} from './utils/transactions.enums';
 
 @Entity()
 export class Transaction {

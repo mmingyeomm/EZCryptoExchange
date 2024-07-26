@@ -48,7 +48,7 @@ export class ChargeController{
           await this.userRepository.getwalletAddressWithUser(user.user.id),
         );
 
-        const updatedAsset = await this.chargeService.updateAsset(userId, charge.amount, "USDT");
+      const updatedAsset = await this.chargeService.updateAsset(userId, charge.amount, "USDT");
       // 5. 지갑에 토큰 넣어주어야 됨. 
 
 

@@ -4,6 +4,8 @@ import { ChargeRepository } from "src/charge/charge.repository";
 import { UserRepository } from "src/user/user.repository";
 import { UserService } from "src/user/user.service";
 import { Contract, ethers } from "ethers";
+import { tokenConfigs } from "./utils/transactions.tokens.config";
+import { BuyAssetDto } from "./dto/transaction.dto";
 
 @Injectable()
 export class TransactionService{
@@ -12,102 +14,38 @@ export class TransactionService{
         private readonly assetRepository: AssetRepository
     ){}
 
-    // async buyToken(userId: number, assetName: string, amount: number){
-    //     if (await this.assetRepository.getAmount("USDT", userId) > amount) {
-    //         let abi = [
-    //             {
-    //                 "inputs": [
-    //                     {
-    //                         "internalType": "address",
-    //                         "name": "_token0",
-    //                         "type": "address"
-    //                     },
-    //                     {
-    //                         "internalType": "address",
-    //                         "name": "_token1",
-    //                         "type": "address"
-    //                     }
-    //                 ],
-    //                 "stateMutability": "nonpayable",
-    //                 "type": "constructor"
-    //             },
-    //             {
-    //                 "inputs": [],
-    //                 "name": "reserve0",
-    //                 "outputs": [
-    //                     {
-    //                         "internalType": "uint256",
-    //                         "name": "",
-    //                         "type": "uint256"
-    //                     }
-    //                 ],
-    //                 "stateMutability": "view",
-    //                 "type": "function"
-    //             },
-    //             {
-    //                 "inputs": [],
-    //                 "name": "reserve1",
-    //                 "outputs": [
-    //                     {
-    //                         "internalType": "uint256",
-    //                         "name": "",
-    //                         "type": "uint256"
-    //                     }
-    //                 ],
-    //                 "stateMutability": "view",
-    //                 "type": "function"
-    //             },
-    //             {
-    //                 "inputs": [],
-    //                 "name": "token0",
-    //                 "outputs": [
-    //                     {
-    //                         "internalType": "contract IERC20",
-    //                         "name": "",
-    //                         "type": "address"
-    //                     }
-    //                 ],
-    //                 "stateMutability": "view",
-    //                 "type": "function"
-    //             },
-    //             {
-    //                 "inputs": [],
-    //                 "name": "token1",
-    //                 "outputs": [
-    //                     {
-    //                         "internalType": "contract IERC20",
-    //                         "name": "",
-    //                         "type": "address"
-    //                     }
-    //                 ],
-    //                 "stateMutability": "view",
-    //                 "type": "function"
-    //             }
-    //         ]
-         
-    //           // provider api key 
-    //           let provider = ethers.getDefaultProvider(`https://sepolia.infura.io/v3/${process.env.INFURA_TOKEN}`);
-    //           let contractAddress = "0xc4a29aEc039EbaB1e637Bd318A1916B12A4f6163"
-    //           let walletPrivateKey = await this.userRepository.getWalletPrivateKeyWithUserId(userId);
-        
-        
-    //           //private key 
-    //           const signer = new ethers.Wallet(walletPrivateKey, provider);
-        
-    //           let contract = new Contract(contractAddress, abi, signer)
-        
-    //           let tx = await contract.approve(to, amount);
-    //           let tx2 = await contract.transfer(to, amount);
-        
-    //           await tx.wait();
-    //           await tx2.wait();
+    async buyToken(userId: number, buyAssetDTO: BuyAssetDto) {
+        console.log(buyAssetDTO)
+        const usdtBalance = await this.assetRepository.getAmount("USDT", userId);
+        const balanceInCents = Math.round(usdtBalance * 100);
+        const amountInCents = Math.round(buyAssetDTO.amount * 100);
+    
+        if (balanceInCents >= amountInCents) {
+          console.log('Available token configs:', Object.keys(tokenConfigs));
+          console.log('Requested asset name:', buyAssetDTO.assetName);
+          
+          // Remove quotation marks from assetName
+          const cleanAssetName = buyAssetDTO.assetName.replace(/"/g, '');
+          console.log('Cleaned asset name:', cleanAssetName);
+          
+          const tokenConfig = tokenConfigs[cleanAssetName];
+          
+          if (tokenConfig) {
+            const { abi, contractAddress } = tokenConfig;
             
-
-           
+            console.log(`Buying ${buyAssetDTO.amount} of ${cleanAssetName}`);
+            console.log(`Using ABI:`, abi);
+            console.log(`Contract address:`, contractAddress);
             
+            // Implement your token buying logic here
             
-
-    //     }
-    // }
+          } else {
+            console.error(`Configuration for ${cleanAssetName} not found in tokenConfigs`);
+            throw new Error(`Configuration for ${cleanAssetName} not found`);
+          }
+        } else {
+          throw new Error('Insufficient USDT balance');
+        }
+    }
 
 }   

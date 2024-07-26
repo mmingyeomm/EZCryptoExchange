@@ -844,14 +844,21 @@ export class ChargeService {
         asset.ROI = 0;
         asset.Return = 0;
       } else {
-        console.log("bought already")
+        console.log("bought already");
+
         // If the asset exists, update it
         const newTotalAmount = asset.amount + chargeAmount;
-        console.log("new total amount: " + newTotalAmount )
-        asset.average_bought = (asset.average_bought * asset.amount + chargeAmount) / newTotalAmount;
-        asset.bought += chargeAmount;
+        console.log("new total amount: " + newTotalAmount);
+        const newAverageBought = (asset.average_bought * asset.amount + chargeAmount) / newTotalAmount;
+        console.log("new average bought: " + newAverageBought);
+        const newBought = asset.bought + chargeAmount;
+        console.log("new bought: " + newBought);
+        const newTotalPrice = asset.total_price + chargeAmount;
+        console.log("new total price: " + newTotalPrice);
+        asset.average_bought = newAverageBought;
+        asset.bought = newBought;
         asset.amount = newTotalAmount;
-        asset.total_price += chargeAmount;
+        asset.total_price = newTotalPrice;
         // ROI and Return calculations might need to be adjusted based on your business logic
       }
   
