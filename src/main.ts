@@ -13,13 +13,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  // Update CORS configuration
-  const corsOrigin = 'https://ezcryptoexchange.shop';
   app.enableCors({
-    origin: corsOrigin,
+    origin: configService.get<string>('CORS_ORIGIN') || '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-    allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization',
   });
 
   // Add body parsing middleware
@@ -32,8 +29,6 @@ async function bootstrap() {
     resave: false,
     cookie: {
       maxAge: 60000,
-      secure: true, // Set this to true for HTTPS
-      sameSite: 'none', // This allows cross-site cookie setting
     }
   }));
 
