@@ -14,31 +14,40 @@ export class TransactionService{
         private readonly assetRepository: AssetRepository
     ){}
 
-    async buyToken(userId: number, buyAssetDTO: BuyAssetDto) {
-        console.log(buyAssetDTO)
+    async buyToken(userId: number, amount: number, assetName: string) {
+
         const usdtBalance = await this.assetRepository.getAmount("USDT", userId);
         const balanceInCents = Math.round(usdtBalance * 100);
-        const amountInCents = Math.round(buyAssetDTO.amount * 100);
+        const amountInCents = Math.round(amount * 100);
     
+        const tokenConfig = tokenConfigs["USDT"];
+        const { abi: usdtABI, contractAddress: usdtContractAddress } = tokenConfig;
+
         if (balanceInCents >= amountInCents) {
-          console.log('Available token configs:', Object.keys(tokenConfigs));
-          console.log('Requested asset name:', buyAssetDTO.assetName);
-          
-          // Remove quotation marks from assetName
-          const cleanAssetName = buyAssetDTO.assetName.replace(/"/g, '');
-          console.log('Cleaned asset name:', cleanAssetName);
-          
+       
+          const cleanAssetName = assetName.replace(/"/g, '');
           const tokenConfig = tokenConfigs[cleanAssetName];
           
           if (tokenConfig) {
-            const { abi, contractAddress } = tokenConfig;
+            const { ammABI: tokenAMMABI   , ammAddress: tokenAmmAddress} = tokenConfig;
             
-            console.log(`Buying ${buyAssetDTO.amount} of ${cleanAssetName}`);
-            console.log(`Using ABI:`, abi);
-            console.log(`Contract address:`, contractAddress);
-            
-            // Implement your token buying logic here
-            
+            let provider = ethers.getDefaultProvider(`https://sepolia.infura.io/v3/${process.env.INFURA_TOKEN}`);
+            let walletPrivateKey = await this.userRepository.getWalletPrivateKeyWithUserId(userId);
+            const signer = new ethers.Wallet(walletPrivateKey, provider);
+
+            let contract = new Contract(usdtContractAddress, usdtABI, signer)
+            let tx = await contract.approve(tokenAmmAddress, amount);
+            let balancebf = await contract.balanceOf("0xD7E283D171Aa9fdd4025E21628F4c99E188954fd")
+            console.log("balance before" + balancebf)
+
+            let contract2 = new Contract(tokenAmmAddress, tokenAMMABI, signer)
+            let tx2 = await contract2.swap(usdtContractAddress, amount);
+
+            console.log(`Buying ${amount} of ${cleanAssetName}`);
+            console.log(tx.hash);
+            console.log(tx2.hash);
+
+
           } else {
             console.error(`Configuration for ${cleanAssetName} not found in tokenConfigs`);
             throw new Error(`Configuration for ${cleanAssetName} not found`);

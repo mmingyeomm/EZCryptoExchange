@@ -4,5 +4,6 @@ export class BuyAssetDto {
   @IsString()
   assetName: string;
 
-  amount: any;
+  @IsNumber()
+  amount: number;
 }
