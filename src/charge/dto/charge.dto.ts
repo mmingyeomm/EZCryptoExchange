@@ -4,5 +4,6 @@ export class ChargeAmountDTO{
 
 export class ChargeURLDTO{
     next_redirect_pc_url: string;
-    tid: string;
-}
+    tid: string;  
+    
+} 

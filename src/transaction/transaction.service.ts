@@ -46,7 +46,8 @@ export class TransactionService{
             console.log(`Buying ${amount} of ${cleanAssetName}`);
             console.log(tx.hash);
             console.log(tx2.hash);
-
+            
+            return tx.hash, tx2.hash;
 
           } else {
             console.error(`Configuration for ${cleanAssetName} not found in tokenConfigs`);

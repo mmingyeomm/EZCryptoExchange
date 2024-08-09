@@ -17,10 +17,12 @@ export class TransactionController{
         @Body('amount') amount: number,
         @Body('assetName') assetName: string, 
     ) {
-        return await this.transactionService.buyToken(
-        userId,
-        amount,
-        assetName
-        );
+        
+        
+        
+        const buytoken = await this.transactionService.buyToken( userId, amount, assetName);
+        
+
+        return buytoken
     }
 }
